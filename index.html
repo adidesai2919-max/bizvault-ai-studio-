@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10131c">
+<title>BizVault AI Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10131c;color:#fff;font-family:Arial,sans-serif;padding:22px}
+header{padding:12px 0 25px}
+.logo{font-size:25px;font-weight:800;color:#9b8cff}
+.tag{color:#9ba3b8;font-size:13px;margin-top:7px}
+h2{font-size:21px;margin:20px 0}
+label{display:block;color:#c6c9d4;font-size:14px;margin:17px 0 8px}
+input,select{width:100%;padding:15px;border:1px solid #34394b;border-radius:10px;background:#1b2030;color:white;font-size:15px}
+button{width:100%;padding:16px;border:0;border-radius:10px;background:#7964f5;color:white;font-size:16px;font-weight:bold;margin-top:22px}
+.card{background:#191e2b;border:1px solid #303649;padding:18px;border-radius:15px}
+#result{display:none;white-space:pre-wrap;line-height:1.6;color:#d9dcef}
+footer{text-align:center;color:#747c91;font-size:12px;margin-top:35px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">✦ BIZVAULT AI</div>
+<div class="tag">Your personal AI video studio</div>
+</header>
+
+<div class="card">
+<h2>Create a new video 🎬</h2>
+
+<label>What video do you want to create?</label>
+<input id="topic" placeholder="Example: How DMart became successful">
+
+<label>Video category</label>
+<select id="category">
+<option>Business documentary</option>
+<option>Facts and knowledge</option>
+<option>Education</option>
+<option>Technology</option>
+<option>Motivation</option>
+<option>Entertainment</option>
+<option>Travel</option>
+<option>Storytelling</option>
+</select>
+
+<label>Video language</label>
+<select id="language">
+<option>Hindi</option>
+<option>English</option>
+<option>Konkani</option>
+</select>
+
+<label>Video duration</label>
+<select id="duration">
+<option>1 minute</option>
+<option>5 minutes</option>
+<option>10 minutes</option>
+<option>15 minutes</option>
+<option>20 minutes</option>
+</select>
+
+<label>Visual style</label>
+<select id="style">
+<option>Cinematic realistic</option>
+<option>3D animation</option>
+<option>Documentary</option>
+<option>Explainer animation</option>
+<option>Social media style</option>
+</select>
+
+<button onclick="generate()">Create video plan →</button>
+</div>
+
+<div class="card" id="output" style="margin-top:20px;display:none">
+<h2>Your project brief</h2>
+<div id="result"></div>
+</div>
+
+<footer>BIZVAULT AI STUDIO • YOUR CREATIVE WORKSPACE</footer>
+
+<script>
+function generate(){
+const topic=document.getElementById("topic").value.trim();
+if(!topic){alert("Please enter your video topic!");return}
+const brief=
+"PROJECT: "+topic+
+"\nCATEGORY: "+document.getElementById("category").value+
+"\nLANGUAGE: "+document.getElementById("language").value+
+"\nDURATION: "+document.getElementById("duration").value+
+"\nVISUAL STYLE: "+document.getElementById("style").value+
+"\n\nYour project brief is ready. AI scriptwriting and video generation will be connected in the next development steps.";
+document.getElementById("result").textContent=brief;
+document.getElementById("output").style.display="block";
+}
+</script>
+</body>
+</html>
