@@ -3,49 +3,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#10131c">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BizVault AI Studio</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#10131c;color:#fff;font-family:Arial,sans-serif;padding:22px}
-header{padding:12px 0 25px}
-.logo{font-size:25px;font-weight:800;color:#9b8cff}
-.tag{color:#9ba3b8;font-size:13px;margin-top:7px}
-h2{font-size:21px;margin:20px 0}
-label{display:block;color:#c6c9d4;font-size:14px;margin:17px 0 8px}
-input,select{width:100%;padding:15px;border:1px solid #34394b;border-radius:10px;background:#1b2030;color:white;font-size:15px}
-button{width:100%;padding:16px;border:0;border-radius:10px;background:#7964f5;color:white;font-size:16px;font-weight:bold;margin-top:22px}
-.card{background:#191e2b;border:1px solid #303649;padding:18px;border-radius:15px}
-#result{display:none;white-space:pre-wrap;line-height:1.6;color:#d9dcef}
-footer{text-align:center;color:#747c91;font-size:12px;margin-top:35px}
+body{margin:0;background:#10131c;color:white;font-family:Arial,sans-serif;padding:20px}
+header{margin:10px 0 25px}
+.logo{font-size:27px;font-weight:800;color:#a78bfa}
+.sub{color:#9ca3af;margin-top:8px}
+.card{background:#1b2030;border:1px solid #34394b;border-radius:16px;padding:20px;margin-bottom:20px}
+h2{font-size:22px}
+label{display:block;margin:18px 0 8px;color:#cbd5e1}
+input,select,button{width:100%;padding:15px;border-radius:10px;border:1px solid #394153;background:#101827;color:white;font-size:16px}
+button{background:#765cf5;border:0;font-weight:bold;margin-top:22px}
+button:active{opacity:.8}
+#output{display:none;white-space:pre-wrap;line-height:1.7;font-size:14px}
+.secondary{background:#34394b}
 </style>
 </head>
 <body>
 <header>
 <div class="logo">✦ BIZVAULT AI</div>
-<div class="tag">Your personal AI video studio</div>
+<div class="sub">Your personal business documentary studio</div>
 </header>
 
 <div class="card">
-<h2>Create a new video 🎬</h2>
+<h2>Create your documentary 🎬</h2>
 
-<label>What video do you want to create?</label>
-<input id="topic" placeholder="Example: How DMart became successful">
+<label>Video topic</label>
+<input id="topic" value="How DMart became successful">
 
-<label>Video category</label>
-<select id="category">
-<option>Business documentary</option>
-<option>Facts and knowledge</option>
-<option>Education</option>
-<option>Technology</option>
-<option>Motivation</option>
-<option>Entertainment</option>
-<option>Travel</option>
-<option>Storytelling</option>
-</select>
-
-<label>Video language</label>
+<label>Language</label>
 <select id="language">
 <option>Hindi</option>
 <option>English</option>
@@ -54,45 +42,109 @@ footer{text-align:center;color:#747c91;font-size:12px;margin-top:35px}
 
 <label>Video duration</label>
 <select id="duration">
-<option>1 minute</option>
-<option>5 minutes</option>
-<option>10 minutes</option>
-<option>15 minutes</option>
-<option>20 minutes</option>
+<option value="1">1 minute</option>
+<option value="5">5 minutes</option>
+<option value="10">10 minutes</option>
+<option value="15" selected>15 minutes</option>
+<option value="20">20 minutes</option>
 </select>
 
 <label>Visual style</label>
 <select id="style">
 <option>Cinematic realistic</option>
 <option>3D animation</option>
-<option>Documentary</option>
-<option>Explainer animation</option>
-<option>Social media style</option>
+<option>Documentary footage</option>
+<option>Explainer graphics</option>
 </select>
 
 <button onclick="generate()">Create video plan →</button>
 </div>
 
-<div class="card" id="output" style="margin-top:20px;display:none">
-<h2>Your project brief</h2>
-<div id="result"></div>
+<div class="card" id="resultCard" style="display:none">
+<h2>Your documentary plan</h2>
+<div id="output"></div>
+<button onclick="copyPlan()">Copy entire plan</button>
+<button class="secondary" onclick="downloadPlan()">Download plan</button>
 </div>
 
-<footer>BIZVAULT AI STUDIO • YOUR CREATIVE WORKSPACE</footer>
-
 <script>
+let finalPlan="";
+
 function generate(){
 const topic=document.getElementById("topic").value.trim();
-if(!topic){alert("Please enter your video topic!");return}
-const brief=
-"PROJECT: "+topic+
-"\nCATEGORY: "+document.getElementById("category").value+
-"\nLANGUAGE: "+document.getElementById("language").value+
-"\nDURATION: "+document.getElementById("duration").value+
-"\nVISUAL STYLE: "+document.getElementById("style").value+
-"\n\nYour project brief is ready. AI scriptwriting and video generation will be connected in the next development steps.";
-document.getElementById("result").textContent=brief;
-document.getElementById("output").style.display="block";
+const lang=document.getElementById("language").value;
+const duration=Number(document.getElementById("duration").value);
+const style=document.getElementById("style").value;
+
+if(!topic){
+alert("Please enter a video topic.");
+return;
+}
+
+const sections=[
+["HOOK","Start with a powerful question or surprising fact."],
+["THE BEGINNING","Explain how the company, idea or story started."],
+["THE PROBLEM","Show the challenge that needed to be solved."],
+["THE BUSINESS MODEL","Explain how the business makes money."],
+["THE GROWTH","Show the important decisions behind its growth."],
+["THE STRATEGY","Explain its marketing, pricing and competition."],
+["THE CHALLENGES","Discuss risks, failures and difficulties."],
+["THE FUTURE","Explain what may happen next."]
+];
+
+let count=Math.max(3,Math.round(duration/1.8));
+let plan="BIZVAULT AI STUDIO\n";
+plan+="================================\n";
+plan+="TOPIC: "+topic+"\n";
+plan+="LANGUAGE: "+lang+"\n";
+plan+="DURATION: "+duration+" minutes\n";
+plan+="VISUAL STYLE: "+style+"\n\n";
+plan+="DOCUMENTARY STRUCTURE\n";
+plan+="================================\n";
+
+for(let i=0;i<count;i++){
+let s=sections[i%sections.length];
+let start=Math.round(i*duration/count);
+let end=Math.round((i+1)*duration/count);
+
+plan+="\nSCENE "+(i+1)+" | "+start+"-"+end+" MINUTES\n";
+plan+="SECTION: "+s[0]+"\n";
+plan+="STORY: "+s[1]+"\n";
+plan+="VISUAL: "+style+" footage showing "+topic+".\n";
+plan+="CAMERA: Use moving shots, close-ups and smooth transitions.\n";
+plan+="AUDIO: Narration, background music and suitable sound effects.\n";
+}
+
+plan+="\n================================\n";
+plan+="RESEARCH CHECKLIST\n";
+plan+="- Verify company history and dates.\n";
+plan+="- Find reliable financial information.\n";
+plan+="- Collect news articles and real footage.\n";
+plan+="- Check every statistic before publishing.\n";
+plan+="\nIMPORTANT: This is a planning tool. It does not yet generate video footage or AI narration.\n";
+
+finalPlan=plan;
+document.getElementById("output").textContent=plan;
+document.getElementById("resultCard").style.display="block";
+document.getElementById("resultCard").scrollIntoView({behavior:"smooth"});
+}
+
+function copyPlan(){
+if(!finalPlan)return;
+navigator.clipboard.writeText(finalPlan)
+.then(()=>alert("Plan copied!"))
+.catch(()=>alert("Please select and copy the plan manually."));
+}
+
+function downloadPlan(){
+if(!finalPlan)return;
+const blob=new Blob([finalPlan],{type:"text/plain"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;
+a.download="BizVault-Documentary-Plan.txt";
+a.click();
+URL.revokeObjectURL(url);
 }
 </script>
 </body>
